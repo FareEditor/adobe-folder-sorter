@@ -8,6 +8,8 @@ This plugin sorts all files in Adobe After Effects and Premiere Pro projects int
 - Audio
 - Data
 - Dynamic Link
+- Generic Layers
+- Templates
 
 **Categories in After Effects**
 - Images
@@ -16,6 +18,7 @@ This plugin sorts all files in Adobe After Effects and Premiere Pro projects int
 - Audio Files
 - 3D Models
 - Dynamic Link
+- Templates
 
 # Installing:
 - Download the source code from the [releases page](https://github.com/Fare7731/adobe-folder-sorter/releases)
