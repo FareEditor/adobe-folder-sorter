@@ -73,7 +73,7 @@ function sortPremiere() {
     
     // --- CONFIGURATION ---
     var categories = {
-        'jpg': 'Images', 'jpeg': 'Images', 'png': 'Images', 'gif': 'Images', 'tiff': 'Images', 'psd': 'Images', 'ai': 'Images',
+        'jpg': 'Images', 'jpeg': 'Images', 'png': 'Images', 'gif': 'Images', 'tiff': 'Images', 'psd': 'Images', 'ai': 'Images', 'exr': 'jpg',
         'mp4': 'Video', 'mov': 'Video', 'avi': 'Video', 'mxf': 'Video', 'r3d': 'Video', 'mts': 'Video', 'braw': 'Video',
         'mp3': 'Audio', 'wav': 'Audio', 'aif': 'Audio', 'wma': 'Audio', 'aac': 'Audio',
         'xml': 'Data', 'csv': 'Data', 'srt': 'Data',
