@@ -3,60 +3,77 @@
     
     var csInterface = new CSInterface();
     
-    // ============================================
-    // SETTINGS
-    // ============================================
-    // true = enable console logs (for dev)
-    // false = silence (for release)
+    // --- LINKS ---
+    var LINKS = {
+        developer: "https://fareeditor.crd.co",
+        source: "https://github.com/Fare7731/adobe-folder-sorter"
+    };
+
     var IS_DEBUG = true; 
 
-    // Author's URL
-    var AUTHOR_URL = "https://fareeditor.crd.co";
-    // ============================================
+    // --- DOM ELEMENTS ---
+    var statusDiv = document.getElementById('status');
+    var sortBtn = document.getElementById('sortBtn');
 
-
-    // --- 1. LOGGER ---
+    // --- LOGGER ---
     if (IS_DEBUG) {
         csInterface.addEventListener("com.foldersorter.debug", function(event) {
-            console.log("%c[JSX]", "color: #bada55; font-weight: bold;", event.data);
+            console.log("%c[JSX]", "color: #bada55", event.data);
         });
     }
 
-    // --- 2. SORT BUTTON ---
-    document.getElementById('sortBtn').addEventListener('click', function () {
-        var statusDiv = document.getElementById('status');
-        statusDiv.innerText = "Processing...";
-        statusDiv.style.color = "#ffff00";
+    // --- HELPER: SET STATUS ---
+    function setStatus(text, type) {
+        statusDiv.innerText = text;
+        statusDiv.className = ""; // Reset classes
+        
+        if (type === "process") statusDiv.classList.add("status-process");
+        else if (type === "success") statusDiv.classList.add("status-success");
+        else if (type === "error") statusDiv.classList.add("status-error");
+        else statusDiv.classList.add("status-ready");
+    }
 
-        if (IS_DEBUG) console.log("--- UI: Button Clicked ---");
+    // --- 1. SORT BUTTON ---
+    sortBtn.addEventListener('click', function () {
+        setStatus("Processing...", "process");
         
         csInterface.evalScript('runSorter()', function(result) {
-            if (IS_DEBUG) console.log("[UI] Result received:", result);
+            if (IS_DEBUG) console.log("[UI] Result:", result);
             
-            statusDiv.innerText = result;
-            
-            // Check for errors/crashes in the result string
-            if (result && (result.indexOf("CRASH") !== -1 || result.indexOf("Error") !== -1)) {
-                statusDiv.style.color = "#ff5555";
-            } else {
-                statusDiv.style.color = "#777";
+            if (!result) {
+                setStatus("Unknown Error", "error");
+                return;
             }
 
-            // Reset status after 3 seconds
+            // CHECK FOR ERRORS
+            if (result.indexOf("CRASH") !== -1 || result.indexOf("ERROR") !== -1) {
+                setStatus(result, "error");
+            }
+            // CHECK FOR "NOTHING TO DO"
+            else if (result.indexOf("No files") !== -1 || result.indexOf("Nothing") !== -1) {
+                setStatus("No files to sort", "error");
+            }
+            // SUCCESS
+            else {
+                setStatus(result, "success");
+            }
+
+            // Auto-reset after 5 seconds
             setTimeout(function() {
                 if (statusDiv.innerText === result) { 
-                    statusDiv.innerText = "Ready";
-                    statusDiv.style.color = "#777";
+                    setStatus("Ready", "ready");
                 }
-            }, 3000);
+            }, 5000);
         });
     });
 
-    // --- 3. AUTHOR LINK ---
-    // Standard <a href> might fail or open inside the panel.
-    // Using CSInterface API to open in default OS browser.
-    document.getElementById('authorLink').addEventListener('click', function() {
-        csInterface.openURLInDefaultBrowser(AUTHOR_URL);
+    // --- 2. FOOTER LINKS ---
+    document.getElementById('devBtn').addEventListener('click', function() {
+        csInterface.openURLInDefaultBrowser(LINKS.developer);
+    });
+
+    document.getElementById('codeBtn').addEventListener('click', function() {
+        csInterface.openURLInDefaultBrowser(LINKS.source);
     });
     
 }());

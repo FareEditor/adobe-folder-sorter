@@ -4,90 +4,128 @@
     <meta charset="utf-8">
     <title>Folder Sorter</title>
     <style>
-        /* Reset and basic styles */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* --- RESET & BASE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
         
         html, body {
-            height: 100%; /* Full height */
-            overflow: hidden; /* Hide scrollbar if not needed */
-        }
-
-        body { 
+            height: 100%;
+            overflow: hidden;
             background-color: #232323; 
             color: #b5b5b5; 
-            font-family: "Adobe Clean", sans-serif; 
+            font-family: "Adobe Clean", "Segoe UI", sans-serif; 
+            user-select: none;
+            cursor: default;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px;
+            padding: 16px;
         }
 
-        /* Header section */
+        /* --- HEADER --- */
         h1 { 
             margin-bottom: 20px; 
             font-size: 14px; 
             text-transform: uppercase; 
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             color: #ececec;
+            font-weight: 900;
         }
-        
-        /* Button styles */
+
+        /* --- MAIN BUTTONS --- */
+        .controls {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        button {
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* Sort Button (Hero) */
         .btn-main { 
             background: #2d8ceb; 
             color: #fff; 
-            border: none; 
-            border-radius: 4px;
-            padding: 12px 20px; 
-            width: 100%; 
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer; 
-            transition: background 0.2s, transform 0.1s;
-            text-transform: uppercase;
+            padding: 16px 0; 
+            font-size: 14px;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
-        .btn-main:hover { background: #1a7adf; }
-        .btn-main:active { background: #0056b3; transform: scale(0.98); }
-        
-        #status {
-            margin-top: 15px;
-            font-size: 10px;
-            color: #777;
+        .btn-main:hover { background: #3fa0ff; transform: translateY(-1px); }
+        .btn-main:active { background: #0064c8; transform: translateY(1px); }
+
+        /* --- STATUS AREA --- */
+        #status-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
             text-align: center;
-            min-height: 14px; /* Prevent text jumping */
         }
 
-        /* Footer (pushed to bottom) */
+        #status {
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        /* Status Colors */
+        .status-ready   { color: #777; font-weight: normal !important; font-size: 12px !important; }
+        .status-process { color: #f1c40f; } /* Yellow */
+        .status-success { color: #2ecc71; text-shadow: 0 0 10px rgba(46, 204, 113, 0.2); } /* Green */
+        .status-error   { color: #e74c3c; } /* Red */
+
+        /* --- FOOTER --- */
         .footer {
-            margin-top: auto; /* Flexbox magic: pushes element to the bottom */
-            font-size: 10px;
-            padding-top: 20px;
-            opacity: 0.6;
-            transition: opacity 0.2s;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #333;
         }
-        .footer:hover { opacity: 1; }
 
-        .author-link {
-            color: #808080;
-            text-decoration: none;
-            cursor: pointer;
-            border-bottom: 1px dotted transparent;
-            transition: color 0.2s, border-color 0.2s;
+        .btn-footer {
+            background: transparent;
+            color: #666;
+            font-size: 10px;
+            padding: 6px 10px;
+            border-radius: 3px;
+            flex: 1;
         }
-        .author-link:hover {
-            color: #2d8ceb;
-            border-bottom-color: #2d8ceb;
-        }
+        .btn-footer:hover { background: #333; color: #ccc; }
+        .btn-footer:active { background: #222; color: #fff; }
 
     </style>
 </head>
 <body>
-    <h1>📂 Sorter</h1>
+    <h1>📂 Sorter v2.0</h1>
     
-    <button id="sortBtn" class="btn-main">Sort Files</button>
-    <div id="status">Ready</div>
+    <div class="controls">
+        <button id="sortBtn" class="btn-main">Sort Files</button>
+    </div>
+
+    <div id="status-container">
+        <div id="status" class="status-ready">Ready to clean up</div>
+    </div>
 
     <div class="footer">
-        <span id="authorLink" class="author-link">created by fare</span>
+        <button id="devBtn" class="btn-footer">Developer</button>
+        <button id="codeBtn" class="btn-footer">Source Code</button>
     </div>
 
     <script src="js/CSInterface.js"></script>
