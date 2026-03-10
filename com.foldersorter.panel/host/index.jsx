@@ -63,7 +63,7 @@ function sortPremiere() {
     var categories = {
         'jpg': 'Images', 'jpeg': 'Images', 'png': 'Images', 'gif': 'Images', 'tiff': 'Images', 'psd': 'Images', 'ai': 'Images',
         'mp4': 'Video', 'mov': 'Video', 'avi': 'Video', 'mxf': 'Video', 'r3d': 'Video', 'mts': 'Video', 'braw': 'Video',
-        'mp3': 'Audio', 'wav': 'Audio', 'aif': 'Audio', 'wma': 'Audio', 'aac': 'Audio', 'm4a': 'Audio',
+        'mp3': 'Audio', 'wav': 'Audio', 'aif': 'Audio', 'wma': 'Audio', 'aac': 'Audio',
         'xml': 'Data', 'csv': 'Data', 'srt': 'Data',
         'aep': 'Dynamic Link', 'prproj': 'Dynamic Link', 'plb': 'Dynamic Link'
     };
@@ -144,7 +144,7 @@ function sortPremiere() {
 
         for (var fName in uniqueFolders) {
             if (!binCache[fName]) {
-                binCache[fName] = findOrCreateBin(root, fName); // Теперь поддерживает вложенность вида "Audio/SFX"
+                binCache[fName] = findOrCreateBin(root, fName);
             }
         }
 
@@ -218,7 +218,7 @@ function sortAfterEffects() {
 
     try {
         var items = project.items;
-        var sortGroups = {}; // Теперь хранит готовые пути, а не просто расширения
+        var sortGroups = {}; 
         var precomps = [];
         var count = 0;
 
@@ -241,12 +241,17 @@ function sortAfterEffects() {
                 if (lowerName.slice(-4) === ".aep" || lowerName.slice(-5) === ".aepx") ext = "dl";
                 else continue; 
             } else if (item instanceof FootageItem) {
-                if (item.mainSource instanceof SolidSource) continue; 
-                if (item.mainSource instanceof PlaceholderSource) continue;
-                try {
-                    var parts = item.name.split('.');
-                    if (parts.length > 1) ext = parts.pop().toLowerCase();
-                } catch(e) {}
+                // HOTFIX: Теперь солиды обрабатываем, давая им псевдо-расширение
+                if (item.mainSource instanceof SolidSource) {
+                    ext = "solid";
+                } else if (item.mainSource instanceof PlaceholderSource) {
+                    continue; 
+                } else {
+                    try {
+                        var parts = item.name.split('.');
+                        if (parts.length > 1) ext = parts.pop().toLowerCase();
+                    } catch(e) {}
+                }
             } else if (item instanceof CompItem) {
                 if (!isAdjustmentLayerComp(item)) precomps.push(item);
                 continue; 
@@ -255,13 +260,14 @@ function sortAfterEffects() {
             if (ext !== "") {
                 var targetFolder = "";
                 
-                if (['jpeg', 'jpg', 'png', 'tiff', 'tif', 'psd', 'exr', 'tga', 'webp', 'bmp'].indexOf(ext) !== -1) targetFolder = 'Images';
+                // Обработка псевдо-расширения для солидов
+                if (ext === 'solid') targetFolder = 'Solids';
+                else if (['jpeg', 'jpg', 'png', 'tiff', 'tif', 'psd', 'exr', 'tga', 'webp', 'bmp'].indexOf(ext) !== -1) targetFolder = 'Images';
                 else if (['mov', 'mp4', 'mxf', 'avi', 'webm', 'mkv', 'flv', 'r3d', 'braw', 'mts'].indexOf(ext) !== -1) targetFolder = 'Video Files';
                 else if (['ai', 'eps', 'pdf', 'svg'].indexOf(ext) !== -1) targetFolder = 'Vector Files';
                 else if (['wav', 'mp3', 'aac', 'm4a', 'wma', 'aiff'].indexOf(ext) !== -1) {
                     targetFolder = 'Audio Files';
                     
-                    // Epidemic Sound & Audio Sub-sorting Logic
                     var isES = (item.name.indexOf("ES_") === 0);
                     var mediaPath = "";
                     try { if (item.mainSource && item.mainSource.file) mediaPath = item.mainSource.file.fsName; } catch(e){}
@@ -289,7 +295,7 @@ function sortAfterEffects() {
 
         // Execute Moves
         for (var fName in sortGroups) {
-            var targetFolderItem = findOrCreateFolderAE(fName); // Поддерживает вложенность "Audio Files/SFX"
+            var targetFolderItem = findOrCreateFolderAE(fName); 
             var list = sortGroups[fName];
             for (var j = 0; j < list.length; j++) {
                 try {
@@ -386,10 +392,9 @@ function mergeFoldersRecursivelyAE(sourceFolder, targetFolder) {
 }
 
 // =========================================================
-// UTILITIES (Upgraded for Path Support)
+// UTILITIES
 // =========================================================
 
-// Создает или находит бины по пути (напр. "Audio/SFX")
 function findOrCreateBin(parentItem, pathStr) {
     var parts = pathStr.split('/');
     var currentBin = parentItem;
@@ -421,7 +426,6 @@ function findBinInBin(parentBin, name) {
     return null;
 }
 
-// Создает или находит папки по пути в AE
 function findOrCreateFolderAE(pathStr) {
     var parts = pathStr.split('/');
     var project = app.project;
