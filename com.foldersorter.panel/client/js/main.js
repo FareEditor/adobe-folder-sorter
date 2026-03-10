@@ -5,7 +5,7 @@
     
     // --- LINKS ---
     var LINKS = {
-        developer: "https://fareeditor.crd.co",
+        developer: "https://fareeditor.com",
         source: "https://github.com/Fare7731/adobe-folder-sorter"
     };
 
