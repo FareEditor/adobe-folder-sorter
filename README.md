@@ -32,4 +32,6 @@ This plugin was written using vibe coding with Google’s neural network called 
 - Open the plugin window in the program by following the path "Window - Extensions - Folder Sorter"
 
 # License:
-The current license is described in the license file
+The current license is described in the [license file](https://github.com/Fare7731/adobe-folder-sorter/blob/main/LICENSE)
+
+
