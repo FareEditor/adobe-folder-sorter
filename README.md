@@ -2,7 +2,7 @@
 
 This plugin sorts all files in Adobe After Effects and Premiere Pro projects into categories based on their extensions in the Project window.
 
-**⚠️ Warning**
+# ⚠️ Warning
 This plugin was written using vibe coding with Google’s neural network called "Gemini." It was tested in real-world conditions, but I can’t guarantee 100% stability.
 
 **Categories in Premiere Pro**
