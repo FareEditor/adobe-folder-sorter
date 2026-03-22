@@ -5,6 +5,8 @@ This plugin sorts all files in Adobe After Effects and Premiere Pro projects int
 # ⚠️ Warning
 This plugin was written using vibe coding with Google’s neural network called "Gemini." It was tested in real-world conditions, but I can’t guarantee 100% stability.
 
+# Folder structure categories
+
 **Categories in Premiere Pro**
 - Images
 - Video
